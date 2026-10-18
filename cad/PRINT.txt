@@ -1,0 +1,95 @@
+O2Analyzer CAD — dimension checklist (mm)
+========================================
+
+Reference (AO-02 outline)
+-------------------------
+Body OD           29.2
+Total height      38.5
+Electrical boss   H 7.0 / ~OD 20
+Thread            M16x1
+
+Tee  (flow_restrictor_tee.scad / stl/tee.stl)
+--------------------------------------------
+Tube OD           25.0
+Tube length       40.0
+Inlet ID          20.6
+Outlet ID         17.6
+Narrow start      x=+6.5 (past +X orifice @ r=3.5)
+Flow arrow        raised on tube top → narrow (+X) outlet
+M16 boss OD       20.0
+M16x1 female      minor Ø15.6 / major Ø16.8  (FDM enlarged; was too tight)
+Thread engage     8.0
+Orifice           4 x Ø2.5 (within ~Ø10 face)
+BBox              ~40 x 25 x 35
+
+If M16 still tight: raise m16_minor_d to 15.8–16.0 in .scad and re-export.
+
+
+Enclosure (v4 — open bottom, bottom-load, separable bottom_cap)
+==============================================================
+Files: body_lower.stl, body_upper.stl, top_cap.stl, bottom_cap.stl
+
+Boards
+------
+ESP32-C3 OLED     20.5 (Y) × 24.5 (Z) PCB; Type-C on narrow end (OLED/screen side)
+ADS1115           25.3 × 9.5 (soldered leads, no headers; floats in −X bay — no cradle)
+Type-C protrude   1.0 past outer floor (bottom_cap)
+Screen flex       permanently attached to ESP — bottom-load only
+Radial +X         wall → screen U-rail → Type-C (outboard of OLED face) → ESP PCB (more central)
+
+Lower bay
+---------
+Outer height      ledge_z = 32 (bot_t 2 + bay_inner 26 + wire_h 4)
+Open bottom       no integral floor; bottom_cap press-fit from below
+ESP slots         ±Y full-height guides + PCB top hard stop (esp_stop_h 1.5)
+ADS cradle        none (removed — print features fell off)
+ESP face_x        ~10.0 (inset 0.7 for ID chord clearance)
+Type-C hole       tc_w 9.4 × tc_h 3.7 (snug to shell); tc_x outboard of OLED face
+Display U-rail    bottom-load, top stop; rail starts pcb_z0+6; disp_w 13; disp_z0 = 12
+
+Upper / top
+-----------
+Join sleeve       male 5.0 / female 5.0; join_interfere 0.20; join_male_extra 0.15 (PETG — thicken male only)
+Sensor cavity     sensor_h = ao_h_body 25 + sensor_top_clear 4.5 (= 29.5) for top_cap bite
+Top cap           friction disc into cavity above AO-02 shoulder; Ø20 for M16
+                  disc Ø = cavity Ø30 + top_interfere 0.45 (= Ø30.45); plate_t 2.5
+
+Bottom cap
+----------
+Solid disc        bot_t 2.0; Type-C stadium 9.4×3.7 on +X; diametral interfere 0.20
+Clocking          none — align Type-C to +X display by eye when pressing in
+Lead-in           body bottom chamfer 0.8 → engage ~1.2 mm (raise bot_interfere if loose)
+
+Assembly
+--------
+1. From open bottom of body_lower: slide screen+ESP (flex attached) up —
+   screen into U-rail, PCB into ±Y slots — until PCB top hits hard stop
+2. Place ADS in −X bay from below (no cradle); route soldered leads upward
+3. Press-fit bottom_cap (align Type-C with +X display);
+   Type-C tip +1 mm past outer floor
+4. Press-fit body_upper onto lower join sleeve
+5. Drop AO-02 from top until elec seat / shoulder seats
+6. Press-fit top_cap into the 3 mm clear above shoulder —
+   M16 protrudes through Ø20 for original cap / tee
+
+If upper join feels loose: raise join_male_extra (now 0.15) toward 0.20–0.25 and reprint lower
+If upper join feels tight: lower join_male_extra by 0.05 and reprint lower
+If you already printed upper with join_interfere 0.35: reprint upper (interfere back to 0.20) or skip extra on male
+If sensor still loose: lower ao_elec_clear / ao_clear and reprint upper
+If bottom_cap feels loose: raise bot_interfere slightly or check print shrinkage
+If Type-C hole too tight: raise tc_w / tc_h by 0.2 and reprint bottom_cap
+If top_cap has no grip: raise top_interfere (now 0.45) toward 0.55–0.60 and reprint top_cap only
+If top_cap too tight to press in: lower top_interfere by 0.05–0.10 and reprint
+
+
+Print files
+-----------
+stl/tee.stl
+stl/body_lower.stl
+stl/body_upper.stl
+stl/top_cap.stl
+stl/bottom_cap.stl
+
+Deprecated (removed in v4)
+--------------------------
+stl/esp_latch.stl
